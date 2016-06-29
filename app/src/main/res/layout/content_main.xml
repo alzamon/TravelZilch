@@ -12,40 +12,98 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.asgeir.myapplication.MainActivity"
     tools:showIn="@layout/activity_main">
+
     <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <ImageButton
+                android:id="@+id/die_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/one"
+                android:ba
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/die_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/one"
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/die_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/one"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+
+            <ImageButton
+                android:id="@+id/die_four"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/one"
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/die_five"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/one"
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/die_six"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/one"
+                android:visibility="invisible" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/base_space"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="2"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="2">
 
         <LinearLayout
-            android:id="@+id/left_view"
-            android:layout_marginTop="165dp"
+            android:id="@+id/hanna_text_space"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginLeft="75dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
-            android:layout_weight="1">
+            android:layout_marginTop="165dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="a      a" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/asgeir_text_space"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="165dp"
-            android:layout_marginLeft="40dp"
             android:layout_alignRight="@+id/left_view"
-            android:background="@color/colorAccent"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="b       b" />
-        </LinearLayout>
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="165dp"
+            android:layout_weight="1"
+            android:orientation="vertical"></LinearLayout>
     </LinearLayout>
 </RelativeLayout>
