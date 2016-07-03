@@ -1,6 +1,5 @@
 package com.example.asgeir.myapplication;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,45 +21,28 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final Game game = new Game(this);
+        final Game game = new Game(Arrays.asList(
+                (ImageButton) findViewById(R.id.die_one),
+                (ImageButton) findViewById(R.id.die_two),
+                (ImageButton) findViewById(R.id.die_three),
+                (ImageButton) findViewById(R.id.die_four),
+                (ImageButton) findViewById(R.id.die_five),
+                (ImageButton) findViewById(R.id.die_six)
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        ),
+                (LinearLayout) findViewById(R.id.hanna_text_space),
+                (LinearLayout) findViewById(R.id.asgeir_text_space),
+                getApplicationContext()
+
+        );
+
+        FloatingActionButton rollAgain = (FloatingActionButton) findViewById(R.id.roll_again);
+        rollAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myActivity(game);
+                game.calculatePointsAndRoll();
             }
         });
-    }
-
-    private void myActivity(Game game) {
-        showDice();
-    }
-
-    private void showDice() {
-        final ImageButton dieOne = (ImageButton) findViewById(R.id.die_one);
-        final ImageButton dieTwo = (ImageButton) findViewById(R.id.die_two);
-        final ImageButton dieThree = (ImageButton) findViewById(R.id.die_three);
-        final ImageButton dieFour = (ImageButton) findViewById(R.id.die_four);
-        final ImageButton dieFive = (ImageButton) findViewById(R.id.die_five);
-        final ImageButton dieSix = (ImageButton) findViewById(R.id.die_six);
-
-        dieOne.setVisibility(View.VISIBLE);
-        dieTwo.setVisibility(View.VISIBLE);
-        dieThree.setVisibility(View.VISIBLE);
-        dieFour.setVisibility(View.VISIBLE);
-        dieFive.setVisibility(View.VISIBLE);
-        dieSix.setVisibility(View.VISIBLE);
-
-        dieOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dieOne.setBackgroundColor(Color.YELLOW);
-            }
-        });
-
-
-
     }
 
     @Override
