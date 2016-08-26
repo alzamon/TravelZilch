@@ -3,12 +3,13 @@ package com.example.asgeir.myapplication;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import java.util.Arrays;
 
@@ -18,8 +19,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         final Game game = new Game(Arrays.asList(
                 (ImageButton) findViewById(R.id.die_one),
@@ -32,8 +31,12 @@ public class MainActivity extends AppCompatActivity {
         ),
                 (LinearLayout) findViewById(R.id.hanna_text_space),
                 (LinearLayout) findViewById(R.id.asgeir_text_space),
-                getApplicationContext()
-
+                getApplicationContext(),
+                (ImageView)findViewById(R.id.hanna_victory),
+                (ImageView)findViewById(R.id.asgeir_victory),
+                (ScrollView)findViewById(R.id.scroll_view),
+                (FloatingActionButton)findViewById(R.id.roll_again),
+                (FloatingActionButton)findViewById(R.id.stop)
         );
 
         FloatingActionButton rollAgain = (FloatingActionButton) findViewById(R.id.roll_again);
@@ -43,6 +46,14 @@ public class MainActivity extends AppCompatActivity {
                 game.calculatePointsAndRoll();
             }
         });
+        FloatingActionButton stop = (FloatingActionButton) findViewById(R.id.stop);
+        stop.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        game.stop();
+                                    }
+                                }
+        );
     }
 
     @Override

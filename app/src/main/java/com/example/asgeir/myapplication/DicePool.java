@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.widget.ImageButton;
 
+import com.android.internal.util.Predicate;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +15,18 @@ public class DicePool {
     private Context applicationContext;
     private List<Die> diceList;
     private List<ImageButton> diceViews;
+    private Predicate<Die> wantToKeepPredicate = new Predicate<Die>() {
+        @Override
+        public boolean apply(Die die) {
+            return die.isWantToKeep();
+        }
+    };
+    private Predicate<Die> trivialPredicate = new Predicate<Die>() {
+        @Override
+        public boolean apply(Die die) {
+            return true;
+        }
+    };
 
     public DicePool(List<ImageButton> diceViews, Context applicationContext) {
         this.diceList = new ArrayList<>();
@@ -42,7 +56,7 @@ public class DicePool {
     }
 
     public boolean wasAThrow() {
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             if (diceList.get(i).isActive() && !diceList.get(i).isWantToKeep()) {
                 return true;
             }
@@ -50,34 +64,14 @@ public class DicePool {
         return false;
     }
 
-    public boolean wasZilch() {
+    private Map<Integer, Integer> createValueCounter(Predicate<Die> predicate) {
         Map<Integer, Integer> valueCounter = new HashMap<>();
         for (int i = 1; i <= 6; i++) {
             valueCounter.put(i, 0);
         }
         for (int i = 0; i < 6; i++) {
             Die die = diceList.get(i);
-            if (die.isActive()) {
-                valueCounter.put(die.getValue(), valueCounter.get(die.getValue()) + 1);
-            }
-        }
-        int pointsThrown = calculatePoints(valueCounter);
-        if (pointsThrown == 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    private Map<Integer, Integer> createValueCounter() {
-        Map<Integer, Integer> valueCounter = new HashMap<>();
-        for (int i = 1; i <= 6; i++) {
-            valueCounter.put(i, 0);
-        }
-        for (int i = 0; i < 6; i++) {
-            Die die = diceList.get(i);
-            if (die.isActive() && die.isWantToKeep()) {
+            if (die.isActive() && predicate.apply(die)) {
                 valueCounter.put(die.getValue(), valueCounter.get(die.getValue()) + 1);
             }
         }
@@ -85,22 +79,42 @@ public class DicePool {
     }
 
     public void activateDice() {
-        for(int i = 0; i < 6; i++) {
-            diceList.get(i).setActive(true);
+        for (int i = 0; i < 6; i++) {
+            diceList.get(i).activate();
         }
+    }
+
+    public boolean noPointsOnActiveDice(){
+        return  calculatePointsOnActiveDice() == 0;
+    }
+
+    public int calculatePointsOnActiveDice(){
+        return calculatePoints(createValueCounter(trivialPredicate));
     }
 
 
     public void disableDiceYouWantedToKeep() {
+        Map<Integer, Integer> valueCounter = createValueCounter(wantToKeepPredicate);
         for (int i = 0; i < 6; i++) {
-            if (diceList.get(i).isWantToKeep()) {
-                diceList.get(i).setActive(false);
+            Die die = diceList.get(i);
+            if (die.isWantToKeep()) {
+                if (hasValue(valueCounter, die)) {
+                    die.disable(true);
+                }
+                else {
+                    die.disable(false);
+                }
             }
         }
     }
 
+
+    private boolean hasValue(Map<Integer, Integer> valueCounter, Die die) {
+        return die.getValue() == 1 || die.getValue() == 5 || valueCounter.get(die.getValue()) >= 3;
+    }
+
     int calculatePointsLastRound() {
-        Map<Integer, Integer> valueCounter = createValueCounter();
+        Map<Integer, Integer> valueCounter = createValueCounter(wantToKeepPredicate);
         return calculatePoints(valueCounter);
     }
 
@@ -130,5 +144,23 @@ public class DicePool {
             }
         }
         return valueTotal;
+    }
+
+    public boolean pointsOnAllDice() {
+        if (wasAThrow()) {
+            return false;
+        }
+        for (int i = 0; i < 6; i++) {
+            if (!diceList.get(i).hadValue() && !diceList.get(i).isActive()) {
+                return false;
+            }
+        }
+        Map<Integer, Integer> valueCounter = createValueCounter(wantToKeepPredicate);
+        for(int i = 0; i < 6; i++) {
+            if (diceList.get(i).isWantToKeep() && !hasValue(valueCounter, diceList.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

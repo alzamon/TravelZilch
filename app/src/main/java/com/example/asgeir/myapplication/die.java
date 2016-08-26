@@ -16,10 +16,16 @@ public class Die {
     private Integer value;
     private Random random;
 
+    public boolean hadValue() {
+        return hadValue;
+    }
+
+    private boolean hadValue;
+
     public Die(ImageButton view, Context applicationContext) {
         this.view = view;
         this.setWantToKeep(false);
-        this.setActive(true);
+        this.activate();
         this.applicationContext = applicationContext;
         this.random = new Random();
         this.view.setOnClickListener(new View.OnClickListener() {
@@ -41,10 +47,18 @@ public class Die {
 
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
-        this.view.setVisibility(active ? View.VISIBLE : View.INVISIBLE);
+    public void activate() {
+        this.active = true;
+        this.view.setVisibility(View.VISIBLE);
         this.setWantToKeep(false);
+        this.hadValue = false;
+    }
+
+    public void disable(boolean hadValue) {
+        this.active = false;
+        this.view.setVisibility(View.INVISIBLE);
+        this.setWantToKeep(false);
+        this.hadValue = hadValue;
     }
 
     public boolean isActive() {
@@ -80,7 +94,7 @@ public class Die {
     }
 
     public void roll(){
-        setValue(random.nextInt(5)+1);
+        setValue(random.nextInt(6)+1);
     }
 
 }
