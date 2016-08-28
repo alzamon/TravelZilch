@@ -14,45 +14,43 @@ import android.widget.TextView;
 import java.util.List;
 
 public class Game {
-    TextView currentScorePlayer1;
-    int scorePlayer1;
+    TextView currentScoreFirstPlayer;
+    int scoreFirstPlayer;
     TextView currentScorePlayer2;
     int scorePlayer2;
-    private LinearLayout player1ScoreView;
-    private LinearLayout player2ScoreView;
+    private LinearLayout firstPlayerScoreView;
+    private LinearLayout secondPlayerScoreView;
     private Context applicationContext;
-    private ImageView player1Victory;
-    private ImageView player2Victory;
+    private ImageView firstPlayerVictory;
+    private ImageView secondPlayerVictory;
     private ScrollView scrollView;
     private FloatingActionButton rollAgainButton;
     private FloatingActionButton stopButton;
     DicePool dicePool;
-    boolean isFirstPlayerTurn;
-    int pointsEarnedThisTurn;
-    boolean player1HasBroken1000PointBarrier;
-    boolean player2HasBroken1000PointBarrier;
-    private int numberOfThrows;
+    boolean firstPlayerHasBroken1000PointBarrier;
+    boolean secondPlayerHasBroken1000PointBarrier;
+    private Turn turn;
 
-    public Game(List<ImageButton> diceViews, LinearLayout player1ScoreView, LinearLayout player2ScoreView, Context applicationContext, ImageView player1Victory, ImageView player2Victory, ScrollView scrollView, FloatingActionButton rollAgainButton, FloatingActionButton stopButton) {
-        this.player1ScoreView = player1ScoreView;
-        this.player2ScoreView = player2ScoreView;
+    public Game(List<ImageButton> diceViews, LinearLayout firstPlayerScoreView, LinearLayout secondPlayerScoreView, Context applicationContext, ImageView firstPlayerVictory, ImageView secondPlayerVictory, ScrollView scrollView, FloatingActionButton rollAgainButton, FloatingActionButton stopButton) {
+        this.firstPlayerScoreView = firstPlayerScoreView;
+        this.secondPlayerScoreView = secondPlayerScoreView;
         this.applicationContext = applicationContext;
-        this.player1Victory = player1Victory;
-        this.player2Victory = player2Victory;
+        this.firstPlayerVictory = firstPlayerVictory;
+        this.secondPlayerVictory = secondPlayerVictory;
         this.scrollView = scrollView;
         this.rollAgainButton = rollAgainButton;
         this.stopButton = stopButton;
         this.dicePool = new DicePool(diceViews, applicationContext);
-        this.isFirstPlayerTurn = true;
+        turn = new Turn();
     }
 
 
-    void addPointsToHanna(int points) {
-        addPointsToCurrentPlayer(points, currentScorePlayer1, player1ScoreView);
+    void addPointsToFirstPlayer(int points) {
+        addPointsToCurrentPlayer(points, currentScoreFirstPlayer, firstPlayerScoreView);
     }
 
-    void addPointsToAsgeir(int points) {
-        addPointsToCurrentPlayer(points, currentScorePlayer2, player2ScoreView);
+    void addPointsToSecondPlayer(int points) {
+        addPointsToCurrentPlayer(points, currentScorePlayer2, secondPlayerScoreView);
     }
 
     private void addPointsToCurrentPlayer(int points, TextView currentScore, LinearLayout scoreView) {
@@ -66,11 +64,11 @@ public class Game {
         scoreView.addView(textView);
         textView.setTextColor(Color.GRAY);
         textView.setText(Integer.toString(totalPoints));
-        if(isFirstPlayerTurn){
-            currentScorePlayer1 = textView;
-            scorePlayer1 = totalPoints;
+        if (turn.isFirstPlayerTurn()) {
+            currentScoreFirstPlayer = textView;
+            scoreFirstPlayer = totalPoints;
         }
-        else{
+        else {
             currentScorePlayer2 = textView;
             scorePlayer2 = totalPoints;
         }
@@ -88,21 +86,21 @@ public class Game {
 
     public void calculatePointsAndRoll() {
         if (!dicePool.wasAThrow() && !dicePool.pointsOnAllDice()) {
-            calculatePointsAndEndTurn(true);
+            calculatePointsAndEndTurn();
             return;
         }
         int pointsEarnedLastRound = dicePool.calculatePointsLastRound();
-        if ((numberOfThrows != 0 && pointsEarnedLastRound == 0) || (dicePool.noPointsOnActiveDice())) {
+        if ((turn.getNumberOfThrows() != 0 && pointsEarnedLastRound == 0) || (dicePool.noPointsOnActiveDice())) {
             zilchAction();
             return;
         }
-        pointsEarnedThisTurn += pointsEarnedLastRound;
+        turn.addPoints(pointsEarnedLastRound);
         dicePool.disableDiceYouWantedToKeep();
 
         if (dicePool.pointsOnAllDice()) {
             dicePool.activateDice();
         }
-        numberOfThrows++;
+        turn.addThrow();
         dicePool.rollAllActiveDice();
     }
 
@@ -111,52 +109,40 @@ public class Game {
         endTurn();
     }
 
-    private void calculatePointsAndEndTurn(boolean isAThrow) {
-        int points;
-        if(isAThrow){
-            points = pointsEarnedThisTurn + dicePool.calculatePointsLastRound();
-        }
-        else{
-            points = pointsEarnedThisTurn + dicePool.calculatePointsOnActiveDice();
-        }
+    private void calculatePointsAndEndTurn() {
+        int points = turn.getPointsEarnedThisTurn() + dicePool.calculatePointsOnActiveDice();
         setBarrierBrokenStatusForPlayer(points);
-        if (playerHasBrokenBarrier()) {
-            addPoints(points);
-        }
-        else{
-            addPoints(0);
-        }
+        addPoints(playerHasBrokenBarrier() ? points : 0);
         endTurn();
     }
 
     private void setBarrierBrokenStatusForPlayer(int points) {
         if (points >= 1000) {
-            if (isFirstPlayerTurn) {
-                player1HasBroken1000PointBarrier = true;
+            if (turn.isFirstPlayerTurn()) {
+                firstPlayerHasBroken1000PointBarrier = true;
             }
             else {
-                player2HasBroken1000PointBarrier = true;
+                secondPlayerHasBroken1000PointBarrier = true;
             }
         }
     }
 
     private boolean playerHasBrokenBarrier() {
-        return (isFirstPlayerTurn && player1HasBroken1000PointBarrier) || (!isFirstPlayerTurn && player2HasBroken1000PointBarrier);
+        return (turn.isFirstPlayerTurn() && firstPlayerHasBroken1000PointBarrier) || (!turn.isFirstPlayerTurn() && secondPlayerHasBroken1000PointBarrier);
     }
 
     private void endTurn() {
         evaluateVictoryConditions();
-        pointsEarnedThisTurn = 0;
-        isFirstPlayerTurn = !isFirstPlayerTurn;
-        numberOfThrows = 0;
+        turn.resetTurnData();
         dicePool.activateDice();
         dicePool.rollAllActiveDice();
     }
 
+
     private void evaluateVictoryConditions() {
-        if(!isFirstPlayerTurn && Math.max(scorePlayer2, scorePlayer1) >= 10000){
+        if (!turn.isFirstPlayerTurn() && Math.max(scorePlayer2, scoreFirstPlayer) >= 10000) {
             hideFloatingButtons();
-            if (scorePlayer1 > scorePlayer2) {
+            if (scoreFirstPlayer > scorePlayer2) {
                 showHannaVictory();
             }
             else {
@@ -171,21 +157,21 @@ public class Game {
     }
 
     private void showAsgeirVictory() {
-        player2Victory.bringToFront();
-        player2Victory.setVisibility(View.VISIBLE);
+        secondPlayerVictory.bringToFront();
+        secondPlayerVictory.setVisibility(View.VISIBLE);
     }
 
     private void showHannaVictory() {
-        player1Victory.bringToFront();
-        player1Victory.setVisibility(View.VISIBLE);
+        firstPlayerVictory.bringToFront();
+        firstPlayerVictory.setVisibility(View.VISIBLE);
     }
 
     private void addPoints(int points) {
-        if (isFirstPlayerTurn) {
-            addPointsToHanna(points);
+        if (turn.isFirstPlayerTurn()) {
+            addPointsToFirstPlayer(points);
         }
         else {
-            addPointsToAsgeir(points);
+            addPointsToSecondPlayer(points);
         }
     }
 
@@ -194,7 +180,7 @@ public class Game {
             zilchAction();
         }
         else {
-            calculatePointsAndEndTurn(false);
+            calculatePointsAndEndTurn();
         }
     }
 }
