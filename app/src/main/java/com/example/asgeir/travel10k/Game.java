@@ -15,14 +15,8 @@ import java.util.List;
 
 public class Game {
     TextView currentScoreFirstPlayer;
-    int scoreFirstPlayer;
-    TextView currentScorePlayer2;
-    int scorePlayer2;
-    private LinearLayout firstPlayerScoreView;
-    private LinearLayout secondPlayerScoreView;
+    TextView currentScoreSecondPlayer;
     private Context applicationContext;
-    private ImageView firstPlayerVictory;
-    private ImageView secondPlayerVictory;
     private ScrollView scrollView;
     private FloatingActionButton rollAgainButton;
     private FloatingActionButton stopButton;
@@ -30,13 +24,13 @@ public class Game {
     boolean firstPlayerHasBroken1000PointBarrier;
     boolean secondPlayerHasBroken1000PointBarrier;
     private Turn turn;
+    private Player player1;
+    private Player player2;
 
     public Game(List<ImageButton> diceViews, LinearLayout firstPlayerScoreView, LinearLayout secondPlayerScoreView, Context applicationContext, ImageView firstPlayerVictory, ImageView secondPlayerVictory, ScrollView scrollView, FloatingActionButton rollAgainButton, FloatingActionButton stopButton) {
-        this.firstPlayerScoreView = firstPlayerScoreView;
-        this.secondPlayerScoreView = secondPlayerScoreView;
+        player1 = new Player(firstPlayerScoreView, firstPlayerVictory, 0);
+        player2 = new Player(secondPlayerScoreView, secondPlayerVictory, 0);
         this.applicationContext = applicationContext;
-        this.firstPlayerVictory = firstPlayerVictory;
-        this.secondPlayerVictory = secondPlayerVictory;
         this.scrollView = scrollView;
         this.rollAgainButton = rollAgainButton;
         this.stopButton = stopButton;
@@ -46,11 +40,11 @@ public class Game {
 
 
     void addPointsToFirstPlayer(int points) {
-        addPointsToCurrentPlayer(points, currentScoreFirstPlayer, firstPlayerScoreView);
+        addPointsToCurrentPlayer(points, currentScoreFirstPlayer, player1.getScoreView());
     }
 
     void addPointsToSecondPlayer(int points) {
-        addPointsToCurrentPlayer(points, currentScorePlayer2, secondPlayerScoreView);
+        addPointsToCurrentPlayer(points, currentScoreSecondPlayer, player2.getScoreView());
     }
 
     private void addPointsToCurrentPlayer(int points, TextView currentScore, LinearLayout scoreView) {
@@ -66,11 +60,11 @@ public class Game {
         textView.setText(Integer.toString(totalPoints));
         if (turn.isFirstPlayerTurn()) {
             currentScoreFirstPlayer = textView;
-            scoreFirstPlayer = totalPoints;
+            player1.addPoints(totalPoints);
         }
         else {
-            currentScorePlayer2 = textView;
-            scorePlayer2 = totalPoints;
+            currentScoreSecondPlayer = textView;
+            player2.addPoints(totalPoints);
         }
         scrollViewDown();
     }
@@ -140,9 +134,9 @@ public class Game {
 
 
     private void evaluateVictoryConditions() {
-        if (!turn.isFirstPlayerTurn() && Math.max(scorePlayer2, scoreFirstPlayer) >= 10000) {
+        if (!turn.isFirstPlayerTurn() && Math.max(player2.getScore(), player1.getScore()) >= 10000) {
             hideFloatingButtons();
-            if (scoreFirstPlayer > scorePlayer2) {
+            if (player1.getScore() > player2.getScore()) {
                 showHannaVictory();
             }
             else {
@@ -157,13 +151,13 @@ public class Game {
     }
 
     private void showAsgeirVictory() {
-        secondPlayerVictory.bringToFront();
-        secondPlayerVictory.setVisibility(View.VISIBLE);
+        player2.getScoreView().bringToFront();
+        player2.getScoreView().setVisibility(View.VISIBLE);
     }
 
     private void showHannaVictory() {
-        firstPlayerVictory.bringToFront();
-        firstPlayerVictory.setVisibility(View.VISIBLE);
+        player1.getScoreView().bringToFront();
+        player1.getScoreView().setVisibility(View.VISIBLE);
     }
 
     private void addPoints(int points) {
