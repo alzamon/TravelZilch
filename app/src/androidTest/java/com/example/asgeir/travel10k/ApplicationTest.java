@@ -1,4 +1,4 @@
-package com.example.asgeir.myapplication;
+package com.example.asgeir.travel10k;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

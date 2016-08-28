@@ -1,4 +1,4 @@
-package com.example.asgeir.myapplication;
+package com.example.asgeir.travel10k;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,48 +14,48 @@ import android.widget.TextView;
 import java.util.List;
 
 public class Game {
-    TextView currentScoreHanna;
-    int scoreHanna;
-    TextView currentScoreAsgeir;
-    int scoreAsgeir;
-    private LinearLayout hannaScoreView;
-    private LinearLayout asgeirScoreView;
+    TextView currentScorePlayer1;
+    int scorePlayer1;
+    TextView currentScorePlayer2;
+    int scorePlayer2;
+    private LinearLayout player1ScoreView;
+    private LinearLayout player2ScoreView;
     private Context applicationContext;
-    private ImageView hannaVictory;
-    private ImageView asgeirVictory;
+    private ImageView player1Victory;
+    private ImageView player2Victory;
     private ScrollView scrollView;
     private FloatingActionButton rollAgainButton;
     private FloatingActionButton stopButton;
     DicePool dicePool;
-    boolean isHannasTurn;
+    boolean isFirstPlayerTurn;
     int pointsEarnedThisTurn;
-    boolean hannaHasBrokenBarrier;
-    boolean asgeirHasBrokenBarrier;
+    boolean player1HasBroken1000PointBarrier;
+    boolean player2HasBroken1000PointBarrier;
     private int numberOfThrows;
 
-    public Game(List<ImageButton> diceViews, LinearLayout hannaScoreView, LinearLayout asgeirScoreView, Context applicationContext, ImageView hannaVictory, ImageView asgeirVictory, ScrollView scrollView, FloatingActionButton rollAgainButton, FloatingActionButton stopButton) {
-        this.hannaScoreView = hannaScoreView;
-        this.asgeirScoreView = asgeirScoreView;
+    public Game(List<ImageButton> diceViews, LinearLayout player1ScoreView, LinearLayout player2ScoreView, Context applicationContext, ImageView player1Victory, ImageView player2Victory, ScrollView scrollView, FloatingActionButton rollAgainButton, FloatingActionButton stopButton) {
+        this.player1ScoreView = player1ScoreView;
+        this.player2ScoreView = player2ScoreView;
         this.applicationContext = applicationContext;
-        this.hannaVictory = hannaVictory;
-        this.asgeirVictory = asgeirVictory;
+        this.player1Victory = player1Victory;
+        this.player2Victory = player2Victory;
         this.scrollView = scrollView;
         this.rollAgainButton = rollAgainButton;
         this.stopButton = stopButton;
         this.dicePool = new DicePool(diceViews, applicationContext);
-        this.isHannasTurn = true;
+        this.isFirstPlayerTurn = true;
     }
 
 
     void addPointsToHanna(int points) {
-        addPointsToCurrentPlayer(points, currentScoreHanna, hannaScoreView, scoreHanna);
+        addPointsToCurrentPlayer(points, currentScorePlayer1, player1ScoreView);
     }
 
     void addPointsToAsgeir(int points) {
-        addPointsToCurrentPlayer(points, currentScoreAsgeir, asgeirScoreView, scoreAsgeir);
+        addPointsToCurrentPlayer(points, currentScorePlayer2, player2ScoreView);
     }
 
-    private void addPointsToCurrentPlayer(int points, TextView currentScore, LinearLayout scoreView, int score) {
+    private void addPointsToCurrentPlayer(int points, TextView currentScore, LinearLayout scoreView) {
         int totalPoints = points;
         TextView textView = new TextView(applicationContext);
 
@@ -66,13 +66,13 @@ public class Game {
         scoreView.addView(textView);
         textView.setTextColor(Color.GRAY);
         textView.setText(Integer.toString(totalPoints));
-        if(isHannasTurn){
-            currentScoreHanna = textView;
-            scoreHanna = totalPoints;
+        if(isFirstPlayerTurn){
+            currentScorePlayer1 = textView;
+            scorePlayer1 = totalPoints;
         }
         else{
-            currentScoreAsgeir = textView;
-            scoreAsgeir = totalPoints;
+            currentScorePlayer2 = textView;
+            scorePlayer2 = totalPoints;
         }
         scrollViewDown();
     }
@@ -131,34 +131,38 @@ public class Game {
 
     private void setBarrierBrokenStatusForPlayer(int points) {
         if (points >= 1000) {
-            if (isHannasTurn) {
-                hannaHasBrokenBarrier = true;
+            if (isFirstPlayerTurn) {
+                player1HasBroken1000PointBarrier = true;
             }
             else {
-                asgeirHasBrokenBarrier = true;
+                player2HasBroken1000PointBarrier = true;
             }
         }
     }
 
     private boolean playerHasBrokenBarrier() {
-        return (isHannasTurn && hannaHasBrokenBarrier) || (!isHannasTurn && asgeirHasBrokenBarrier);
+        return (isFirstPlayerTurn && player1HasBroken1000PointBarrier) || (!isFirstPlayerTurn && player2HasBroken1000PointBarrier);
     }
 
     private void endTurn() {
-        if(!isHannasTurn && Math.max(scoreAsgeir, scoreHanna) >= 10000){
+        evaluateVictoryConditions();
+        pointsEarnedThisTurn = 0;
+        isFirstPlayerTurn = !isFirstPlayerTurn;
+        numberOfThrows = 0;
+        dicePool.activateDice();
+        dicePool.rollAllActiveDice();
+    }
+
+    private void evaluateVictoryConditions() {
+        if(!isFirstPlayerTurn && Math.max(scorePlayer2, scorePlayer1) >= 10000){
             hideFloatingButtons();
-            if (scoreHanna > scoreAsgeir) {
+            if (scorePlayer1 > scorePlayer2) {
                 showHannaVictory();
             }
             else {
                 showAsgeirVictory();
             }
         }
-        pointsEarnedThisTurn = 0;
-        isHannasTurn = !isHannasTurn;
-        numberOfThrows = 0;
-        dicePool.activateDice();
-        dicePool.rollAllActiveDice();
     }
 
     private void hideFloatingButtons() {
@@ -167,17 +171,17 @@ public class Game {
     }
 
     private void showAsgeirVictory() {
-        asgeirVictory.bringToFront();
-        asgeirVictory.setVisibility(View.VISIBLE);
+        player2Victory.bringToFront();
+        player2Victory.setVisibility(View.VISIBLE);
     }
 
     private void showHannaVictory() {
-        hannaVictory.bringToFront();
-        hannaVictory.setVisibility(View.VISIBLE);
+        player1Victory.bringToFront();
+        player1Victory.setVisibility(View.VISIBLE);
     }
 
     private void addPoints(int points) {
-        if (isHannasTurn) {
+        if (isFirstPlayerTurn) {
             addPointsToHanna(points);
         }
         else {

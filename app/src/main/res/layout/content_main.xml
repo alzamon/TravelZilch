@@ -10,11 +10,11 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:context="com.example.asgeir.myapplication.MainActivity"
+                tools:context="com.example.asgeir.travel10k.MainActivity"
                 tools:showIn="@layout/activity_main">
 
     <ImageView
-        android:id="@+id/hanna_victory"
+        android:id="@+id/player1_victory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
@@ -23,7 +23,7 @@
         />
 
     <ImageView
-        android:id="@+id/asgeir_victory"
+        android:id="@+id/player2_victory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
@@ -54,7 +54,7 @@
                 android:weightSum="3">
 
                 <LinearLayout
-                    android:id="@+id/hanna_text_space"
+                    android:id="@+id/player1_text_space"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="75dp"
@@ -65,7 +65,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/asgeir_text_space"
+                    android:id="@+id/player2_text_space"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_alignRight="@+id/left_view"

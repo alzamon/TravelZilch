@@ -1,4 +1,4 @@
-package com.example.asgeir.myapplication;
+package com.example.asgeir.travel10k;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -29,11 +29,11 @@ public class MainActivity extends AppCompatActivity {
                 (ImageButton) findViewById(R.id.die_six)
 
         ),
-                (LinearLayout) findViewById(R.id.hanna_text_space),
-                (LinearLayout) findViewById(R.id.asgeir_text_space),
+                (LinearLayout) findViewById(R.id.player1_text_space),
+                (LinearLayout) findViewById(R.id.player2_text_space),
                 getApplicationContext(),
-                (ImageView)findViewById(R.id.hanna_victory),
-                (ImageView)findViewById(R.id.asgeir_victory),
+                (ImageView)findViewById(R.id.player1_victory),
+                (ImageView)findViewById(R.id.player2_victory),
                 (ScrollView)findViewById(R.id.scroll_view),
                 (FloatingActionButton)findViewById(R.id.roll_again),
                 (FloatingActionButton)findViewById(R.id.stop)

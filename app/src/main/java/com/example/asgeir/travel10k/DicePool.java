@@ -1,4 +1,4 @@
-package com.example.asgeir.myapplication;
+package com.example.asgeir.travel10k;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,7 +14,6 @@ import java.util.Map;
 public class DicePool {
     private Context applicationContext;
     private List<Die> diceList;
-    private List<ImageButton> diceViews;
     private Predicate<Die> wantToKeepPredicate = new Predicate<Die>() {
         @Override
         public boolean apply(Die die) {
@@ -38,7 +37,6 @@ public class DicePool {
         for (int i = 0; i < 6; i++) {
             this.diceList.add(new Die(diceViews.get(i), applicationContext));
             diceViews.get(i).setBackgroundColor(Color.TRANSPARENT);
-            final int finalI = i;
         }
         rollAllActiveDice();
     }
@@ -49,10 +47,6 @@ public class DicePool {
                 diceList.get(i).roll();
             }
         }
-    }
-
-    public Die get(int i) {
-        return diceList.get(i);
     }
 
     public boolean wasAThrow() {
