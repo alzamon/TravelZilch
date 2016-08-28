@@ -17,7 +17,7 @@ public class GameTest {
         pointsCounter.put(4, 0);
         pointsCounter.put(5, 2);
         pointsCounter.put(6, 1);
-        assertEquals(1100, new Game().calculatePoints(pointsCounter));
+        assertEquals(1100, new DicePool().calculatePoints(pointsCounter));
     }
 
 }

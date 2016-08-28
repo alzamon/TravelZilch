@@ -9,9 +9,11 @@ public class Turn {
     private List<Player> players;
     private Player currentPlayer;
     private int numberOfThrows = 0;
+    private boolean lastPlayer;
 
     public Turn(Player player1, Player player2) {
         players = Arrays.asList(player1, player2);
+        currentPlayer = player1;
     }
 
     public int getPointsEarnedThisTurn() {
@@ -24,7 +26,7 @@ public class Turn {
 
     public void resetTurnData() {
         pointsEarnedThisTurn = 0;
-        currentPlayer = players.get(players.indexOf(currentPlayer) + 1 % players.size());
+        currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
         numberOfThrows = 0;
     }
 
@@ -38,5 +40,9 @@ public class Turn {
 
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public boolean isLastPlayer() {
+        return currentPlayer.equals(players.get(players.size()-1));
     }
 }

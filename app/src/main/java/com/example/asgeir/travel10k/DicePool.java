@@ -33,6 +33,10 @@ public class DicePool {
         initializeDice(diceViews);
     }
 
+    public DicePool() {
+
+    }
+
     private void initializeDice(List<ImageButton> diceViews) {
         for (int i = 0; i < 6; i++) {
             this.diceList.add(new Die(diceViews.get(i), applicationContext));
