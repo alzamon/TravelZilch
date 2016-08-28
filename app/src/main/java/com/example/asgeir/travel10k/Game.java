@@ -1,7 +1,6 @@
 package com.example.asgeir.travel10k;
 
 import android.content.Context;
-import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -14,14 +13,14 @@ import java.util.List;
 public class Game {
     private Context applicationContext;
     private ScrollView scrollView;
-    private FloatingActionButton rollAgainButton;
-    private FloatingActionButton stopButton;
+    private ImageButton rollAgainButton;
+    private ImageButton stopButton;
     DicePool dicePool;
     private Turn turn;
     private Player player1;
     private Player player2;
 
-    public Game(List<ImageButton> diceViews, LinearLayout firstPlayerScoreView, LinearLayout secondPlayerScoreView, Context applicationContext, ImageView firstPlayerVictory, ImageView secondPlayerVictory, ScrollView scrollView, FloatingActionButton rollAgainButton, FloatingActionButton stopButton) {
+    public Game(List<ImageButton> diceViews, LinearLayout firstPlayerScoreView, LinearLayout secondPlayerScoreView, Context applicationContext, ImageView firstPlayerVictory, ImageView secondPlayerVictory, ScrollView scrollView, ImageButton rollAgainButton, ImageButton stopButton) {
         player1 = new Player(firstPlayerScoreView, firstPlayerVictory);
         player2 = new Player(secondPlayerScoreView, secondPlayerVictory);
         this.applicationContext = applicationContext;

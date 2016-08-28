@@ -1,7 +1,6 @@
 package com.example.asgeir.travel10k;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,18 +34,18 @@ public class MainActivity extends AppCompatActivity {
                 (ImageView)findViewById(R.id.player1_victory),
                 (ImageView)findViewById(R.id.player2_victory),
                 (ScrollView)findViewById(R.id.scroll_view),
-                (FloatingActionButton)findViewById(R.id.roll_again),
-                (FloatingActionButton)findViewById(R.id.stop)
+                (ImageButton)findViewById(R.id.roll_again),
+                (ImageButton)findViewById(R.id.stop)
         );
 
-        FloatingActionButton rollAgain = (FloatingActionButton) findViewById(R.id.roll_again);
+        ImageButton rollAgain = (ImageButton) findViewById(R.id.roll_again);
         rollAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 game.calculatePointsAndRoll();
             }
         });
-        FloatingActionButton stop = (FloatingActionButton) findViewById(R.id.stop);
+        ImageButton stop = (ImageButton) findViewById(R.id.stop);
         stop.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
