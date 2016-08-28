@@ -35,7 +35,7 @@ public class Game {
         this.rollAgainButton = rollAgainButton;
         this.stopButton = stopButton;
         this.dicePool = new DicePool(diceViews, applicationContext);
-        turn = new Turn();
+        turn = new Turn(player1, player2);
     }
 
 
@@ -58,7 +58,7 @@ public class Game {
         scoreView.addView(textView);
         textView.setTextColor(Color.GRAY);
         textView.setText(Integer.toString(totalPoints));
-        if (turn.isFirstPlayerTurn()) {
+        if (turn.getCurrentPlayer().equals(player1)) {
             currentScoreFirstPlayer = textView;
             player1.addPoints(totalPoints);
         }
@@ -112,7 +112,7 @@ public class Game {
 
     private void setBarrierBrokenStatusForPlayer(int points) {
         if (points >= 1000) {
-            if (turn.isFirstPlayerTurn()) {
+            if (turn.getCurrentPlayer().equals(player1)) {
                 firstPlayerHasBroken1000PointBarrier = true;
             }
             else {
@@ -122,7 +122,7 @@ public class Game {
     }
 
     private boolean playerHasBrokenBarrier() {
-        return (turn.isFirstPlayerTurn() && firstPlayerHasBroken1000PointBarrier) || (!turn.isFirstPlayerTurn() && secondPlayerHasBroken1000PointBarrier);
+        return (turn.getCurrentPlayer().equals(player1) && firstPlayerHasBroken1000PointBarrier) || (!turn.getCurrentPlayer().equals(player1) && secondPlayerHasBroken1000PointBarrier);
     }
 
     private void endTurn() {
@@ -134,7 +134,7 @@ public class Game {
 
 
     private void evaluateVictoryConditions() {
-        if (!turn.isFirstPlayerTurn() && Math.max(player2.getScore(), player1.getScore()) >= 10000) {
+        if (!turn.getCurrentPlayer().equals(player1) && Math.max(player2.getScore(), player1.getScore()) >= 10000) {
             hideFloatingButtons();
             if (player1.getScore() > player2.getScore()) {
                 showHannaVictory();
@@ -161,7 +161,7 @@ public class Game {
     }
 
     private void addPoints(int points) {
-        if (turn.isFirstPlayerTurn()) {
+        if (turn.getCurrentPlayer().equals(player1)) {
             addPointsToFirstPlayer(points);
         }
         else {

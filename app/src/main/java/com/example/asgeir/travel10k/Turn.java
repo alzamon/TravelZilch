@@ -1,17 +1,21 @@
 package com.example.asgeir.travel10k;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Turn {
 
     private int pointsEarnedThisTurn = 0;
-    private boolean isFirstPlayerTurn = true;
+    private List<Player> players;
+    private Player currentPlayer;
     private int numberOfThrows = 0;
+
+    public Turn(Player player1, Player player2) {
+        players = Arrays.asList(player1, player2);
+    }
 
     public int getPointsEarnedThisTurn() {
         return pointsEarnedThisTurn;
-    }
-
-    public boolean isFirstPlayerTurn() {
-        return isFirstPlayerTurn;
     }
 
     public int getNumberOfThrows() {
@@ -20,7 +24,7 @@ public class Turn {
 
     public void resetTurnData() {
         pointsEarnedThisTurn = 0;
-        isFirstPlayerTurn = !isFirstPlayerTurn();
+        currentPlayer = players.get(players.indexOf(currentPlayer) + 1 % players.size());
         numberOfThrows = 0;
     }
 
@@ -30,5 +34,9 @@ public class Turn {
 
     public void addThrow() {
         numberOfThrows++;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 }
