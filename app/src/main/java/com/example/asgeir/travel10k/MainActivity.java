@@ -3,7 +3,8 @@ package com.example.asgeir.travel10k;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
+import android.view.Menu
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
