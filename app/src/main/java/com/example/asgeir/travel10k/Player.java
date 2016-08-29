@@ -11,21 +11,28 @@ public class Player {
     private final ImageView playerVictory;
     private int score;
     private TextView currentScoreView;
+    private TextViewFactory textViewFactory;
     private boolean is1000PointBarrierBroken;
 
-    public Player(LinearLayout scoreView, ImageView playerVictory) {
+    public Player(LinearLayout scoreView, ImageView playerVictory, TextViewFactory textViewFactory) {
         this.scoreView = scoreView;
         this.playerVictory = playerVictory;
+        this.textViewFactory = textViewFactory;
     }
 
-    public void addPoints(int points, TextView newCurrentScoreView) {
+    public void addPoints(int points) {
         int totalPoints = points + score;
         if (currentScoreView != null) {
             currentScoreView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         }
+
+        String string = Integer.toString(totalPoints);
+        if(points < 100){
+            string = " " + string;
+        }
+        TextView newCurrentScoreView = textViewFactory.createTextView(string);
         scoreView.addView(newCurrentScoreView);
         newCurrentScoreView.setTextColor(Color.GRAY);
-        newCurrentScoreView.setText(Integer.toString(totalPoints));
         this.currentScoreView = newCurrentScoreView;
         score += points;
     }

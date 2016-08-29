@@ -1,6 +1,7 @@
 package com.example.asgeir.travel10k;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import java.util.Arrays;
 
@@ -18,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        TextViewFactory textViewFactory = createAndAddPlayerNames();
 
         final Game game = new Game(Arrays.asList(
                 (ImageButton) findViewById(R.id.die_one),
@@ -30,13 +35,14 @@ public class MainActivity extends AppCompatActivity {
         ),
                 (LinearLayout) findViewById(R.id.player1_text_space),
                 (LinearLayout) findViewById(R.id.player2_text_space),
-                getApplicationContext(),
-                (ImageView)findViewById(R.id.player1_victory),
-                (ImageView)findViewById(R.id.player2_victory),
-                (ScrollView)findViewById(R.id.scroll_view),
-                (ImageButton)findViewById(R.id.roll_again),
-                (ImageButton)findViewById(R.id.stop)
+                textViewFactory,
+                (ImageView) findViewById(R.id.player1_victory),
+                (ImageView) findViewById(R.id.player2_victory),
+                (ScrollView) findViewById(R.id.scroll_view),
+                (ImageButton) findViewById(R.id.roll_again),
+                (ImageButton) findViewById(R.id.stop)
         );
+
 
         ImageButton rollAgain = (ImageButton) findViewById(R.id.roll_again);
         rollAgain.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +59,26 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
         );
+    }
+
+    @NonNull
+    private TextViewFactory createAndAddPlayerNames() {
+        TextViewFactory textViewFactory = new TextViewFactory(getApplicationContext());
+        TextView playerOneName = textViewFactory.createTextView("Hanna");
+        playerOneName.setPadding(120, 0, 120, 0);
+        playerOneName.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        TextView playerTwoName = textViewFactory.createTextView("Asgeir");
+        playerTwoName.setPadding(120, 0, 120, 0);
+        playerTwoName.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        LinearLayout linearLayout = new LinearLayout(getApplicationContext());
+        linearLayout.setPadding(300, 440, 0, 0);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        linearLayout.addView(playerOneName);
+        linearLayout.addView(playerTwoName);
+        View view = findViewById(R.id.outside_scroller);
+        ((LinearLayout) view).addView(linearLayout, 0);
+        return textViewFactory;
     }
 
     @Override

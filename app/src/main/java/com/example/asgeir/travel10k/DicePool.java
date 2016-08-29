@@ -33,9 +33,7 @@ public class DicePool {
         initializeDice(diceViews);
     }
 
-    public DicePool() {
-
-    }
+    public DicePool(){}
 
     private void initializeDice(List<ImageButton> diceViews) {
         for (int i = 0; i < 6; i++) {

@@ -1,17 +1,14 @@
 package com.example.asgeir.travel10k;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import java.util.List;
 
 public class Game {
-    private Context applicationContext;
     private ScrollView scrollView;
     private ImageButton rollAgainButton;
     private ImageButton stopButton;
@@ -19,15 +16,18 @@ public class Game {
     private Turn turn;
     private Player player1;
     private Player player2;
+    TextViewFactory textViewFactory;
 
-    public Game(List<ImageButton> diceViews, LinearLayout firstPlayerScoreView, LinearLayout secondPlayerScoreView, Context applicationContext, ImageView firstPlayerVictory, ImageView secondPlayerVictory, ScrollView scrollView, ImageButton rollAgainButton, ImageButton stopButton) {
-        player1 = new Player(firstPlayerScoreView, firstPlayerVictory);
-        player2 = new Player(secondPlayerScoreView, secondPlayerVictory);
-        this.applicationContext = applicationContext;
+    public Game(List<ImageButton> diceViews, LinearLayout firstPlayerScoreView, LinearLayout secondPlayerScoreView,
+                TextViewFactory textViewFactory, ImageView firstPlayerVictory, ImageView secondPlayerVictory, ScrollView scrollView,
+                ImageButton rollAgainButton, ImageButton stopButton) {
+        this.textViewFactory = textViewFactory;
+        player1 = new Player(firstPlayerScoreView, firstPlayerVictory, textViewFactory);
+        player2 = new Player(secondPlayerScoreView, secondPlayerVictory, textViewFactory);
         this.scrollView = scrollView;
         this.rollAgainButton = rollAgainButton;
         this.stopButton = stopButton;
-        this.dicePool = new DicePool(diceViews, applicationContext);
+        this.dicePool = new DicePool(diceViews, textViewFactory.getApplicationContext());
         turn = new Turn(player1, player2);
     }
 
@@ -66,7 +66,7 @@ public class Game {
     }
 
     private void addPointsToCurrentPlayer(int points) {
-        turn.getCurrentPlayer().addPoints(points, new TextView(applicationContext));
+        turn.getCurrentPlayer().addPoints(points);
         scrollViewDown();
     }
 
